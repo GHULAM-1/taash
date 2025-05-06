@@ -3,11 +3,12 @@
     "name": "app",
     "slug": "app",
     "version": "1.0.0",
+    "sdkVersion": "53.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
+     "entryPoint": "index.js",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -35,7 +36,6 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
     }
   }
 }

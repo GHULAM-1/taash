@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -6,7 +7,6 @@ import * as ScreenOrientation from 'expo-screen-orientation'; // ⬅️ import t
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useCallback } from 'react';
 import { View } from 'react-native';
-import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
