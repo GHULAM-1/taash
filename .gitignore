@@ -77,3 +77,29 @@ yarn-error.*
 *.tsbuildinfo
 
 # @end expo-cli
+
+# ——————————————————————
+# Android / Gradle build artifacts
+# ——————————————————————
+
+# Android project folder
+android/
+
+# Gradle cache (inside android/)
+android/.gradle/
+
+# Native build output
+android/app/build/
+android/build/
+
+# Local Android SDK config (never commit this)
+android/local.properties
+
+# Android Studio files
+*.iml
+.idea/
+
+# Keystores and other sensitive keys
+*.jks
+*.keystore
+*.p12
