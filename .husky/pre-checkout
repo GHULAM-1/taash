@@ -1,5 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
 if ! git diff-index --quiet HEAD --; then
   echo "❌ You have uncommitted changes. Please commit or stash before switching branches."
