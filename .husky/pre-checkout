@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if ! git diff-index --quiet HEAD --; then
+  echo "❌ You have uncommitted changes. Please commit or stash before switching branches."
+  exit 1
+fi
