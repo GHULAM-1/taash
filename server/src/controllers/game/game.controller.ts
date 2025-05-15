@@ -1,4 +1,3 @@
-// src/controllers/game.controller.ts
 import {
   Controller,
   Post,
@@ -28,7 +27,6 @@ interface AuthDto {
 export class GameController {
   constructor(private readonly games: GameService) {}
 
-  /** Create a new room */
   @Post("create")
   async create(@Req() req: Request, @Body() dto: CreateDto) {
     // req.user is populated by JwtStrategy
@@ -36,24 +34,20 @@ export class GameController {
     return this.games.createGame(dto.name, ownerId);
   }
 
-  /** List rooms you’ve created */
   @Get("my")
   async my(@Req() req: Request) {
     const ownerId = (req.user as any).id;
     return this.games.findMyGames(ownerId);
   }
 
-  /** Pusher Presence auth (no Jwt guard here if you prefer public) */
-  // src/controllers/game.controller.ts
   @Post("auth")
-  @HttpCode(200)    // <<< ensure we return HTTP 200, not 201
+  @HttpCode(200)    
   auth(@Body() dto: any) {
     console.log("Pusher auth body:", dto);
     const { socket_id, channel_name, userId, name } = dto;
     if (!socket_id || !channel_name || !userId) {
       throw new BadRequestException("Missing auth parameters");
     }
-    // Trust channel_name from Pusher
     return this.games.auth(socket_id, channel_name, userId, { name });
   }
 }

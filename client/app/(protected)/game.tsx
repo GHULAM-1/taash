@@ -29,12 +29,11 @@ export default function GamesScreen() {
   const [newName, setNewName]                 = useState('')
   const [creating, setCreating]               = useState(false)
 
-  // Fetch your games
   const fetchMyGames = async () => {
     setLoading(true)
     try {
       const { data } = await axios.get('/api/game/my')
-      setMyGames(data)       // expecting [{ id, name, roomId }]
+      setMyGames(data)       
     } catch (err:any) {
       Alert.alert('Error', err.response?.data?.message || err.message)
     } finally {
@@ -46,7 +45,7 @@ export default function GamesScreen() {
     fetchMyGames()
   }, [])
 
-  // Handlers
+
   const handleJoin = () => {
     setShowJoinModal(true)
     setJoinCode('')
@@ -95,7 +94,6 @@ export default function GamesScreen() {
     <View className="flex-1 justify-center bg-black p-5">
       <Stack.Screen options={{ headerShown: false, title: 'game' }} />
 
-      {/* Top buttons */}
       <View className="flex-row justify-between mb-8">
         <TouchableOpacity
           onPress={handleJoin}
@@ -111,7 +109,6 @@ export default function GamesScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* My games list */}
       <Text className="text-white text-xl font-bold mb-4">
         Games Created by Me
       </Text>
@@ -145,7 +142,6 @@ export default function GamesScreen() {
         ))
       )}
 
-      {/* Join Modal */}
       <Modal visible={showJoinModal} transparent animationType="slide">
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white rounded-lg p-6 w-4/5">
@@ -169,7 +165,6 @@ export default function GamesScreen() {
         </View>
       </Modal>
 
-      {/* Create Modal */}
       <Modal visible={showCreateModal} transparent animationType="slide">
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white rounded-lg p-6 w-4/5">

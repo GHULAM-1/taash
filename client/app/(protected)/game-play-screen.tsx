@@ -1,4 +1,3 @@
-// app/(protected)/GamePlayScreen.tsx
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -30,7 +29,6 @@ export default function GamePlayScreen() {
       return;
     }
 
-    // generate a stable user ID for this session
     const userId = Math.random().toString(36).substr(2, 8);
     setMyID(userId);
     const name = `Player-${userId}`;
@@ -107,7 +105,6 @@ export default function GamePlayScreen() {
           </View>
         )}
 
-        {/* Left-center opponent */}
         {others[1] && (
           <View
             className="bg-gray-800 items-center justify-center rounded-lg p-4"
@@ -123,7 +120,6 @@ export default function GamePlayScreen() {
           </View>
         )}
 
-        {/* Right-center opponent */}
         {others[2] && (
           <View
             className="bg-gray-800 items-center justify-center rounded-lg p-4"
@@ -139,7 +135,6 @@ export default function GamePlayScreen() {
           </View>
         )}
 
-        {/* You at bottom-center */}
         {you && (
           <View
             className="bg-blue-600 items-center justify-center rounded-lg p-4"
@@ -171,7 +166,6 @@ export default function GamePlayScreen() {
         </View>
       </View>
 
-      {/* “All joined” banner */}
       {ready && (
         <View className="absolute top-4 left-0 right-0 items-center">
           <Text className="text-green-400 font-bold text-lg">

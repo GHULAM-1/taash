@@ -1,4 +1,3 @@
-// app/(protected)/_layout.tsx
 import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { Slot, Stack, useRouter } from "expo-router";
@@ -8,7 +7,6 @@ export default function ProtectedLayout() {
   const [checking, setChecking] = useState(true);
   const router = useRouter();
 
-  // app/(protected)/_layout.tsx
   useEffect(() => {
     (async () => {
       try {
