@@ -1,148 +1,101 @@
+// screens/Login.tsx
 import React, { useEffect, useState } from 'react';
-import {
-  View, Text, TextInput, TouchableOpacity,
-  Alert, ToastAndroid, Platform
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ToastAndroid, Platform } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { makeRedirectUri } from 'expo-auth-session';
-import {
-  WEB_CLIENT_ID,
-  ANDROID_CLIENT_ID,
-  IOS_CLIENT_ID
-} from '@env';
+import { WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID } from '@env';
 import { login } from '@/services/api';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const redirectUri = makeRedirectUri({
-    scheme: 'myapp',
-    // if you’re running on localhost, you can also do:
-    // preferLocalhost: true
-  });
-  console.log(redirectUri)
+  const redirectUri = makeRedirectUri({ scheme: 'myapp' });
   const [request, response, promptAsync] = Google.useAuthRequest({
     redirectUri,
-    // webClientId: WEB_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,           
     androidClientId: ANDROID_CLIENT_ID,      
     scopes: ['openid', 'profile', 'email'],
   });
+
   useEffect(() => {
     if (response?.type === 'success') {
-      const { id_token } = response.params;
       Platform.OS === 'android'
         ? ToastAndroid.show('Logged in with Google', ToastAndroid.SHORT)
         : Alert.alert('Success', 'Logged in with Google');
       router.replace('/test');
     }
   }, [response]);
+
   const handleLogin = async () => {
     try {
-      await login(email, password)
-
-      if (Platform.OS === 'android') {
-        ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT)
-      } else {
-        Alert.alert('Success', 'Logged in successfully')
-      }
-
-      router.replace('/test')
+      await login(email, password);
+      Platform.OS === 'android'
+        ? ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT)
+        : Alert.alert('Success', 'Logged in successfully');
+      router.replace('/test');
     } catch (err: any) {
-      console.error(err)
-      Alert.alert('Login failed', err.response?.data?.error || err.message)
+      Alert.alert('Login failed', err.response?.data?.error || err.message);
     }
-  }
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+    <View className="flex-1 justify-center  px-5 bg-black">
       <Stack.Screen options={{ headerShown: false, title: 'Login' }} />
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: 'bold',
-          marginBottom: 20,
-          textAlign: 'center',
-          color: 'white',
-        }}
-      >
+
+      <Text className="text-2xl font-bold mb-5 text-center text-white">
         Welcome Back
       </Text>
+
       <TextInput
         placeholder="Email"
         placeholderTextColor="#fff"
         value={email}
         onChangeText={setEmail}
-        style={{
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 8,
-          padding: 10,
-          marginBottom: 15,
-          color: 'white',
-        }}
         keyboardType="email-address"
         autoCapitalize="none"
+        className="border border-gray-400 rounded-lg px-3 py-2 mb-4 text-white"
       />
+
       <TextInput
         placeholder="Password"
         placeholderTextColor="#fff"
         value={password}
         onChangeText={setPassword}
-        style={{
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 8,
-          padding: 10,
-          marginBottom: 15,
-          color: 'white',
-        }}
         secureTextEntry
+        className="border border-gray-400 rounded-lg px-3 py-2 mb-4 text-white"
       />
+
       <TouchableOpacity
-        style={{
-          backgroundColor: '#007AFF',
-          padding: 15,
-          borderRadius: 8,
-          alignItems: 'center',
-          marginBottom: 10,
-        }}
         onPress={handleLogin}
+        className="bg-blue-600 py-3 rounded-lg items-center mb-2"
       >
-        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
-          Sign In
-        </Text>
+        <Text className="text-white text-base font-bold">Sign In</Text>
       </TouchableOpacity>
+
       <TouchableOpacity onPress={() => router.push('/signup')}>
-        <Text style={{ color: '#007AFF', textAlign: 'center', marginTop: 10, marginBottom: 10 }}>
+        <Text className="text-blue-600 text-center mb-4">
           Don't have an account? Sign Up
         </Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => promptAsync()}
-        style={{ padding: 15, backgroundColor: '#4285F4', borderRadius: 8}}
+        className="bg-blue-500 py-3 rounded-lg items-center mb-2"
       >
-        <Text style={{ color: '#fff' }}>Sign Up with Google</Text>
+        <Text className="text-white">Sign Up with Google</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
-        style={{
-          backgroundColor: '#007AFF',
-          padding: 15,
-          borderRadius: 8,
-          alignItems: 'center',
-          marginTop: 10,
-        }}
         onPress={() => router.replace('/forget-password')}
+        className="bg-blue-600 py-3 rounded-lg items-center mt-4"
       >
-        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
-          Forget password
-        </Text>
+        <Text className="text-white text-base font-bold">Forget password</Text>
       </TouchableOpacity>
     </View>
-  )
+  );
 }

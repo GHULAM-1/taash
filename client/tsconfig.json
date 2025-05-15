@@ -3,14 +3,23 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "types": [
+      "nativewind/types"
+    ],
     "paths": {
-      "@/*": ["./*"],
-      "@env": ["env.d.ts"]
+      "@/*": [
+        "./*"
+      ],
+      "@env": [
+        "env.d.ts"
+      ]
     }
   },
   "include": [
+    "nativewind/types",
     "env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "nativewind-env.d.ts"
   ]
 }

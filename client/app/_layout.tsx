@@ -1,33 +1,38 @@
-import 'react-native-reanimated';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack, useRouter } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect } from 'react';
-import { View } from 'react-native';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { me } from '@/services/api';
+import "react-native-reanimated";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack, useRouter } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { StatusBar } from "expo-status-bar";
+import { useCallback, useEffect } from "react";
+import { View } from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { me } from "@/services/api";
+import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const router = useRouter()
+  const router = useRouter();
 
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await me();
-        console.log('Logged in as:', data.user);
-        router.replace('/test');
+        console.log("Logged in as:", data.user);
+        router.replace("/test");
       } catch {
-        router.replace('/login');
+        router.replace("/login");
       }
     })();
   }, []);
@@ -43,12 +48,12 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <Stack>
-          {/* default initial route loads `login.tsx` */}
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="signup" options={{ headerShown: false }} />
+          <Stack.Screen name="reset-password" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </View>

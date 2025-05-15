@@ -24,6 +24,11 @@
             "BROWSABLE",
             "DEFAULT"
           ]
+        },
+        {
+          "action": "VIEW",
+          "data": { "scheme": "exp" },
+          "category": ["BROWSABLE","DEFAULT"]
         }
       ],
       "adaptiveIcon": {
