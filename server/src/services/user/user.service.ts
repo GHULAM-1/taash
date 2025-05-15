@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { User } from '../../types/user.schema';
 import * as bcrypt from 'bcrypt';
 
-
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
