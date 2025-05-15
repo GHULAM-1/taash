@@ -10,8 +10,12 @@ const api = axios.create({
 export const signup = (email: string, password: string) =>
   api.post('/api/auth/signup', { email, password });
 
-export const login = (email: string, password: string) =>
-  api.post('/api/auth/login', { email, password });
+export const login = (email: string, password: string) => {
+  const path = '/api/auth/login';
+  const fullUrl = `${API_URL}${path}`;
+  console.log(`🛠️  Login URL: ${fullUrl}`);
+  return api.post(path, { email, password });
+};
 
 export const logout = () =>
   api.post('/api/auth/logout');

@@ -6,5 +6,4 @@ export interface IUser extends Document {
   password?: string;
   provider: 'email' | 'google';
   verified: boolean;
-  comparePassword(candidate: string): Promise<boolean>;
 }

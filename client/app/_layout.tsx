@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { StatusBar } from "expo-status-bar";
@@ -19,6 +19,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const segments = useSegments();
   const router = useRouter();
 
   const [loaded] = useFonts({
@@ -30,20 +31,27 @@ export default function RootLayout() {
       try {
         const { data } = await me();
         console.log("Logged in as:", data.user);
-        router.replace("/test");
+        router.replace("/lobby");
       } catch {
         router.replace("/login");
       }
     })();
   }, []);
   const onLayoutRootView = useCallback(async () => {
-    if (loaded) {
+    const authRoutes = ["login", "signup", "reset-password", "forget-password"];
+    const first = segments[0] ?? "";
+    if (authRoutes.includes(first)) {
       await ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.PORTRAIT
       );
-      await SplashScreen.hideAsync();
+    } else {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE
+      );
     }
-  }, [loaded]);
+
+    await SplashScreen.hideAsync();
+  }, [segments]);
 
   if (!loaded) return null;
 
@@ -53,8 +61,19 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="signup" options={{ headerShown: false }} />
-          <Stack.Screen name="reset-password" />
-          <Stack.Screen name="+not-found" />
+          <Stack.Screen
+            name="forget-password"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="reset-password"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="lobby"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
       </View>
       <StatusBar style="auto" />

@@ -27,7 +27,7 @@ export default function Login() {
       Platform.OS === 'android'
         ? ToastAndroid.show('Logged in with Google', ToastAndroid.SHORT)
         : Alert.alert('Success', 'Logged in with Google');
-      router.replace('/test');
+      router.replace('/lobby');
     }
   }, [response]);
 
@@ -37,7 +37,7 @@ export default function Login() {
       Platform.OS === 'android'
         ? ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT)
         : Alert.alert('Success', 'Logged in successfully');
-      router.replace('/test');
+      router.replace('/lobby');
     } catch (err: any) {
       Alert.alert('Login failed', err.response?.data?.error || err.message);
     }
