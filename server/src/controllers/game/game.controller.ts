@@ -7,18 +7,13 @@ import {
   UseGuards,
   BadRequestException,
   HttpCode,
+  Param,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 import { GameService } from "@/services/game/game.service";
 
 interface CreateDto {
-  name: string;
-}
-interface AuthDto {
-  socket_id: string;
-  roomId: string;
-  userId: string;
   name: string;
 }
 
@@ -29,7 +24,6 @@ export class GameController {
 
   @Post("create")
   async create(@Req() req: Request, @Body() dto: CreateDto) {
-    // req.user is populated by JwtStrategy
     const ownerId = (req.user as any).id;
     return this.games.createGame(dto.name, ownerId);
   }
@@ -50,4 +44,12 @@ export class GameController {
     }
     return this.games.auth(socket_id, channel_name, userId, { name });
   }
+  @Post(":roomId/deal")
+  async deal(@Param("roomId") roomId: string) {
+    if (!roomId) {
+      throw new BadRequestException("roomId is required");
+    }
+    return this.games.dealCards(roomId);
+  }
+  
 }

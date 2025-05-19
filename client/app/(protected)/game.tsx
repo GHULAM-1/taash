@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,89 +10,98 @@ import {
   ActivityIndicator,
   ToastAndroid,
   Platform,
-} from 'react-native'
-import { Stack, useRouter } from 'expo-router'
-import { Ionicons } from '@expo/vector-icons'
-import * as Clipboard from 'expo-clipboard'
-import axios from '../../services/api'
+} from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+import axios from "@/services/api";
 
-interface Game { id: string; name: string; roomId: string }
+interface Game {
+  id: string;
+  name: string;
+  roomId: string;
+}
 
 export default function GamesScreen() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [myGames, setMyGames] = useState<Game[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showJoinModal, setShowJoinModal]     = useState(false)
-  const [joinCode, setJoinCode]               = useState('')
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [newName, setNewName]                 = useState('')
-  const [creating, setCreating]               = useState(false)
+  const [myGames, setMyGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const fetchMyGames = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const { data } = await axios.get('/api/game/my')
-      setMyGames(data)       
-    } catch (err:any) {
-      Alert.alert('Error', err.response?.data?.message || err.message)
+      const { data } = await axios.get("/api/game/my");
+      setMyGames(data);
+    } catch (err: any) {
+      Alert.alert("Error", err.response?.data?.message || err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchMyGames()
-  }, [])
-
+    fetchMyGames();
+  }, []);
 
   const handleJoin = () => {
-    setShowJoinModal(true)
-    setJoinCode('')
-  }
+    setShowJoinModal(true);
+    setJoinCode("");
+  };
   const submitJoin = () => {
     if (!joinCode.trim()) {
-      return Alert.alert('Please enter a room code')
+      return Alert.alert("Please enter a room code");
     }
-    setShowJoinModal(false)
-    router.push({ pathname: '/game-play-screen', params: { roomId: joinCode.trim() } })
-  }
+    setShowJoinModal(false);
+    router.push({
+      pathname: "/game-play-screen",
+      params: { roomId: joinCode.trim() },
+    });
+  };
 
   const handleCreate = () => {
-    setShowCreateModal(true)
-    setNewName('')
-  }
+    setShowCreateModal(true);
+    setNewName("");
+  };
   const submitCreate = async () => {
-    if (!newName.trim()) return Alert.alert('Name required')
-    setCreating(true)
+    if (!newName.trim()) return Alert.alert("Name required");
+    setCreating(true);
     try {
-      const { data } = await axios.post('/api/game/create', { name: newName })
-      setShowCreateModal(false)
-      fetchMyGames()
-      router.push({ pathname: '/game-play-screen', params: { roomId: data.roomId } })
-    } catch (err:any) {
-      Alert.alert('Error', err.response?.data?.message || err.message)
+      const { data } = await axios.post("/api/game/create", { name: newName });
+      setShowCreateModal(false);
+      fetchMyGames();
+      router.push({
+        pathname: "/game-play-screen",
+        params: { roomId: data.roomId },
+      });
+    } catch (err: any) {
+      Alert.alert("Error", err.response?.data?.message || err.message);
     } finally {
-      setCreating(false)
+      setCreating(false);
     }
-  }
+  };
 
   const joinMyGame = (roomId: string) => {
-    router.push({ pathname: '/game-play-screen', params: { roomId } })
-  }
+    router.push({ pathname: "/game-play-screen", params: { roomId } });
+  };
 
   const copyCode = async (roomId: string) => {
-    await Clipboard.setStringAsync(roomId)
-    if (Platform.OS === 'android') {
-      ToastAndroid.show('Code copied to clipboard', ToastAndroid.SHORT)
+    await Clipboard.setStringAsync(roomId);
+    if (Platform.OS === "android") {
+      ToastAndroid.show("Code copied to clipboard", ToastAndroid.SHORT);
     } else {
-      Alert.alert('Copied!', `Room code "${roomId}" copied.`)
+      Alert.alert("Copied!", `Room code "${roomId}" copied.`);
     }
-  }
+  };
 
   return (
-    <View className="flex-1 justify-center bg-black p-5">
-      <Stack.Screen options={{ headerShown: false, title: 'game' }} />
+    <View className="flex-1 justify-center mt-7  bg-black p-5">
+      <Stack.Screen options={{ headerShown: false, title: "game" }} />
 
       <View className="flex-row justify-between mb-8">
         <TouchableOpacity
@@ -117,29 +126,42 @@ export default function GamesScreen() {
       ) : myGames.length === 0 ? (
         <Text className="text-gray-400">No games yet.</Text>
       ) : (
-        myGames.map((g) => (
-          <View
-            key={g.id}
-            className="bg-gray-800 rounded-lg p-4 mb-4"
-          >
-            <Text className="text-white text-lg mb-1">{g.name}</Text>
-            <Text className="text-gray-400 mb-3">Code: {g.roomId}</Text>
-            <View className="flex-row justify-end gap-2 space-x-2">
-              <TouchableOpacity
-                onPress={() => copyCode(g.roomId)}
-                className="bg-yellow-600 py-2 px-3 rounded-lg"
-              >
-                <Text className="text-black font-semibold">Copy Code</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => joinMyGame(g.roomId)}
-                className="bg-blue-600 py-2 px-3 rounded-lg"
-              >
-                <Text className="text-white font-semibold">Join</Text>
-              </TouchableOpacity>
+        <ScrollView
+          contentContainerStyle={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+          }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {myGames.map((g) => (
+            <View
+              key={g.id}
+              className="bg-gray-800 rounded-lg mx-3 p-4 h-[60%] justify-between items-start"
+            >
+              <View>
+                <Text className="text-white text-lg mb-1">{g.name}</Text>
+                <Text className="text-gray-400 mb-3">Code: {g.roomId}</Text>
+              </View>
+              <View className="flex-row space-x-2 gap-3">
+                <TouchableOpacity
+                  onPress={() => copyCode(g.roomId)}
+                  className="bg-yellow-600 py-2 px-3 rounded-lg"
+                >
+                  <Text className="text-black font-semibold">Copy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => joinMyGame(g.roomId)}
+                  className="bg-blue-600 py-2 px-3 rounded-lg"
+                >
+                  <Text className="text-white font-semibold">Join</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))
+          ))}
+        </ScrollView>
       )}
 
       <Modal visible={showJoinModal} transparent animationType="slide">
@@ -181,7 +203,7 @@ export default function GamesScreen() {
               </TouchableOpacity>
               <TouchableOpacity onPress={submitCreate} disabled={creating}>
                 <Text className="text-green-600 font-bold">
-                  {creating ? 'Creating…' : 'Create'}
+                  {creating ? "Creating…" : "Create"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -189,5 +211,5 @@ export default function GamesScreen() {
         </View>
       </Modal>
     </View>
-  )
+  );
 }
