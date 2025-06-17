@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2020",
+      "lib": ["es2020"],
+  
+      // decorators & metadata
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+  
+      // strict mode
+      "strict": true,
+  
+      // interop for CJS libs like cookie-parser
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+  
+      // source → output
+      "rootDir": "src",
+      "outDir": "dist",
+      "sourceMap": true,
+  
+      // alias support
+      "baseUrl": "src",
+      "paths": {
+        "@/*": ["*"]
+      }
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
+  
